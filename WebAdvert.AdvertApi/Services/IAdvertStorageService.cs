@@ -1,12 +1,12 @@
 ﻿using System.Threading.Tasks;
-using WebAdvert.AdvertApi.Models;
+using WebAdvert.AdvertApi.Dto;
 
 namespace WebAdvert.AdvertApi.Services
 {
     public interface IAdvertStorageService
     {
-        Task<string> AddAsync(AdvertModel model);
-        Task ConfirmAsync(ConfirmAdvertModel model);
+        Task<string> AddAsync(AdvertDto model);
+        Task ConfirmAsync(ConfirmAdvertDto model);
         Task<bool> CheckHealthAsync();
     }
 }

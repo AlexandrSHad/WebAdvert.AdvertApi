@@ -4,7 +4,7 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebAdvert.AdvertApi.Models;
+using WebAdvert.AdvertApi.Dto;
 
 namespace WebAdvert.AdvertApi.Services
 {
@@ -17,7 +17,7 @@ namespace WebAdvert.AdvertApi.Services
             _mapper = mapper;
         }
 
-        public async Task<string> AddAsync(AdvertModel model)
+        public async Task<string> AddAsync(AdvertDto model)
         {
             var dbModel = _mapper.Map<AdvertDbModel>(model);
 
@@ -36,7 +36,7 @@ namespace WebAdvert.AdvertApi.Services
             return dbModel.Id;
         }
 
-        public async Task ConfirmAsync(ConfirmAdvertModel model)
+        public async Task ConfirmAsync(ConfirmAdvertDto model)
         {
             using (var client = new AmazonDynamoDBClient())
             {

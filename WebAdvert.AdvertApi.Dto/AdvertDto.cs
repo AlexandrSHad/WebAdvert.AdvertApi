@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace WebAdvert.AdvertApi.Models
+﻿namespace WebAdvert.AdvertApi.Dto
 {
-    public class AdvertModel
+    public class AdvertDto
     {
         public string Title { get; set; }
         public string Description { get; set; }

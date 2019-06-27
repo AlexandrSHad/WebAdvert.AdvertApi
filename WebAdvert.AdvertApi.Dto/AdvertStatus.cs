@@ -1,4 +1,4 @@
-﻿namespace WebAdvert.AdvertApi.Models
+﻿namespace WebAdvert.AdvertApi.Dto
 {
     public enum AdvertStatus
     {

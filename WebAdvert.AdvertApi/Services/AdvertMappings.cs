@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using WebAdvert.AdvertApi.Models;
+using WebAdvert.AdvertApi.Dto;
 
 namespace WebAdvert.AdvertApi.Services
 {
@@ -7,7 +7,7 @@ namespace WebAdvert.AdvertApi.Services
     {
         public AdvertMappings()
         {
-            CreateMap<AdvertModel, AdvertDbModel>();
+            CreateMap<AdvertDto, AdvertDbModel>();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using WebAdvert.AdvertApi.Models;
+using WebAdvert.AdvertApi.Dto;
 using WebAdvert.AdvertApi.Services;
 
 namespace WebAdvert.AdvertApi.Controllers
@@ -20,12 +20,12 @@ namespace WebAdvert.AdvertApi.Controllers
         [HttpPost]
         [Route("create")]
         [ProducesResponseType(400)]
-        [ProducesResponseType(typeof(CreateAdvertResponse), 201)]
-        public async Task<IActionResult> Create(AdvertModel model)
+        [ProducesResponseType(typeof(CreateAdvertResponseDto), 201)]
+        public async Task<IActionResult> Create(AdvertDto model)
         {
             var advertId = await _advertStorageService.AddAsync(model);
 
-            var result = new CreateAdvertResponse { Id = advertId };
+            var result = new CreateAdvertResponseDto { Id = advertId };
 
             return Created($"adverts/v1/{result.Id}", result);
         }
@@ -34,7 +34,7 @@ namespace WebAdvert.AdvertApi.Controllers
         [Route("confirm")]
         [ProducesResponseType(404)]
         [ProducesResponseType(200)]
-        public async Task<IActionResult> Confirm(ConfirmAdvertModel model)
+        public async Task<IActionResult> Confirm(ConfirmAdvertDto model)
         {
             // TODO: use messaging (lecture 15)
             try

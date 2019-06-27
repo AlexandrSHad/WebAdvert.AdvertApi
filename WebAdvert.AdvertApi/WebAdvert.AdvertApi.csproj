@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebAdvert.AdvertApi.Models\WebAdvert.AdvertApi.Models.csproj" />
+    <ProjectReference Include="..\WebAdvert.AdvertApi.Dto\WebAdvert.AdvertApi.Dto.csproj" />
   </ItemGroup>
 
 </Project>
