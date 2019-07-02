@@ -4,7 +4,7 @@ using WebAdvert.AdvertApi.Dto;
 
 namespace WebAdvert.AdvertApi.Services
 {
-    [DynamoDBTable("Advert")]
+    [DynamoDBTable("Adverts")]
     public class AdvertDbModel
     {
         [DynamoDBHashKey]
@@ -15,6 +15,7 @@ namespace WebAdvert.AdvertApi.Services
 
         [DynamoDBProperty]
         public string Description { get; set; }
+        public string FilePath { get; set; }
 
         [DynamoDBProperty]
         public double Price { get; set; }
