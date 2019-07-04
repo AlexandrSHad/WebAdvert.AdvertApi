@@ -8,6 +8,7 @@ using WebAdvert.AdvertApi.Dto;
 
 namespace WebAdvert.AdvertApi.Services
 {
+    // TODO: inject DynamoDBContext or it wrapper as a constructor
     public class DynamoDbAdvertStorage : IAdvertStorageService
     {
         private readonly IMapper _mapper;
@@ -42,23 +43,35 @@ namespace WebAdvert.AdvertApi.Services
             {
                 using (var context = new DynamoDBContext(client))
                 {
-                    var record = await context.LoadAsync<AdvertDbModel>(model.Id);
+                    var advert = await context.LoadAsync<AdvertDbModel>(model.Id);
 
-                    if (record == null)
+                    if (advert == null)
                     {
                         throw new KeyNotFoundException($"Record with Id: {model.Id} was not found.");
                     }
 
                     if (model.Status == AdvertStatus.Active)
                     {
-                        record.Status = AdvertStatus.Active;
-                        record.FilePath = model.FilePath;
-                        await context.SaveAsync(record);
+                        advert.Status = AdvertStatus.Active;
+                        advert.FilePath = model.FilePath;
+                        await context.SaveAsync(advert);
                     }
                     else
                     {
-                        await context.DeleteAsync(record);
+                        await context.DeleteAsync(advert);
                     }
+                }
+            }
+        }
+
+        public async Task<AdvertDto> GetByIdAsync(string id)
+        {
+            using (var client = new AmazonDynamoDBClient())
+            {
+                using (var context = new DynamoDBContext(client))
+                {
+                    var advert = await context.LoadAsync<AdvertDbModel>(id);
+                    return _mapper.Map<AdvertDto>(advert);
                 }
             }
         }

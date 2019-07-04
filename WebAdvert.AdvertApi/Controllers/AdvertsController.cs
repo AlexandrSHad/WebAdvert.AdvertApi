@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using Amazon.SimpleNotificationService;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebAdvert.AdvertApi.Dto;
 using WebAdvert.AdvertApi.Services;
+using Microsoft.Extensions.Configuration;
+using WebAdvert.AdvertApi.Dto.Messages;
+using Newtonsoft.Json;
 
 namespace WebAdvert.AdvertApi.Controllers
 {
@@ -11,10 +15,12 @@ namespace WebAdvert.AdvertApi.Controllers
     public class AdvertsController : Controller
     {
         private readonly IAdvertStorageService _advertStorageService;
+        private readonly IConfiguration _configuration;
 
-        public AdvertsController(IAdvertStorageService advertStorageService)
+        public AdvertsController(IAdvertStorageService advertStorageService, IConfiguration configuration)
         {
             _advertStorageService = advertStorageService;
+            _configuration = configuration;
         }
 
         [HttpPost]
@@ -40,6 +46,7 @@ namespace WebAdvert.AdvertApi.Controllers
             try
             {
                 await _advertStorageService.ConfirmAsync(model);
+                await RaiseAdvertConfirmedMessageAsync(model);
             }
             catch (KeyNotFoundException ex)
             {
@@ -47,6 +54,34 @@ namespace WebAdvert.AdvertApi.Controllers
             }
 
             return Ok();
+        }
+
+        // TODO: move this method to service
+        private async Task RaiseAdvertConfirmedMessageAsync(ConfirmAdvertDto confirmModel)
+        {
+            var topicArn = _configuration.GetValue<string>("TopicArn");
+
+            // To get the title we fetch the advert from db,
+            // or in another way you can pass Title with ConfirmAdvertDto
+            var advert = await _advertStorageService.GetByIdAsync(confirmModel.Id);
+
+            if (advert == null)
+            {
+                throw new KeyNotFoundException($"Record with Id: {confirmModel.Id} was not found.");
+            }
+
+            using (var snsClient = new AmazonSimpleNotificationServiceClient())
+            {
+                var message = new AdvertConfirmedMessage
+                {
+                    Id = confirmModel.Id,
+                    Title = advert.Title
+                };
+
+                var messageJson = JsonConvert.SerializeObject(message);
+
+                await snsClient.PublishAsync(topicArn, messageJson);
+            }
         }
     }
 }
