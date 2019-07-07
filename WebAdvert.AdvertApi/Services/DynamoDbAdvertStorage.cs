@@ -8,7 +8,8 @@ using WebAdvert.AdvertApi.Dto;
 
 namespace WebAdvert.AdvertApi.Services
 {
-    // TODO: inject DynamoDBContext or it wrapper as a constructor
+    // TODO: use DI container services.AddAWSService<IAmazonDynamoDB>();
+    // https://aws.amazon.com/ru/blogs/developer/working-with-dependency-injection-in-net-standard-inject-your-aws-clients-part-1/
     public class DynamoDbAdvertStorage : IAdvertStorageService
     {
         private readonly IMapper _mapper;
